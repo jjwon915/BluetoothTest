@@ -9,22 +9,17 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Set;
 import java.util.UUID;
 
 public class Controlling extends Activity {
     private static final String TAG = "BlueTest5-Controlling";
-    private int mMaxChars = 50000;//Default//change this to string..........
+    private int mMaxChars = 50000;
     private UUID mDeviceUUID;
     private BluetoothSocket mBTSocket;
     private ReadInput mReadThread = null;
@@ -36,26 +31,21 @@ public class Controlling extends Activity {
     private Button mBtnDisconnect;
     private BluetoothDevice mDevice;
 
-    final static String on="0";//on
-    final static String off="1";//off
+    final static String on="92"; // on
+    final static String off="79"; // off
 
 
     private ProgressDialog progressDialog;
     Button btnOn,btnOff;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_controlling);
 
-        ActivityHelper.initialize(this);
         // mBtnDisconnect = (Button) findViewById(R.id.btnDisconnect);
         btnOn=(Button)findViewById(R.id.on);
         btnOff=(Button)findViewById(R.id.off);
-
-
-
 
         Intent intent = getIntent();
         Bundle b = intent.getExtras();
@@ -65,24 +55,17 @@ public class Controlling extends Activity {
 
         Log.d(TAG, "Ready");
 
-
-
-
-
         btnOn.setOnClickListener(new View.OnClickListener()
         {
 
             @Override
             public void onClick(View v) {
-// TODO Auto-generated method stub
-
-
 
                 try {
                     mBTSocket.getOutputStream().write(on.getBytes());
 
                 } catch (IOException e) {
-                    // TODO Auto-generated catch block
+
                     e.printStackTrace();
                 }
             }});
@@ -92,22 +75,14 @@ public class Controlling extends Activity {
 
             @Override
             public void onClick(View v) {
-// TODO Auto-generated method stub
-
-
 
                 try {
                     mBTSocket.getOutputStream().write(off.getBytes());
                 } catch (IOException e) {
-                    // TODO Auto-generated catch block
+
                     e.printStackTrace();
                 }
             }});
-
-
-
-
-
     }
 
     private class ReadInput implements Runnable {
@@ -135,27 +110,19 @@ public class Controlling extends Activity {
                     if (inputStream.available() > 0) {
                         inputStream.read(buffer);
                         int i = 0;
-                        /*
-                         * This is needed because new String(buffer) is taking the entire buffer i.e. 256 chars on Android 2.3.4 http://stackoverflow.com/a/8843462/1287554
-                         */
+
                         for (i = 0; i < buffer.length && buffer[i] != 0; i++) {
                         }
                         final String strInput = new String(buffer, 0, i);
-
-                        /*
-                         * If checked then receive text, better design would probably be to stop thread if unchecked and free resources, but this is a quick fix
-                         */
-
-
 
                     }
                     Thread.sleep(500);
                 }
             } catch (IOException e) {
-// TODO Auto-generated catch block
+
                 e.printStackTrace();
             } catch (InterruptedException e) {
-// TODO Auto-generated catch block
+
                 e.printStackTrace();
             }
 
@@ -174,12 +141,11 @@ public class Controlling extends Activity {
         }
 
         @Override
-        protected Void doInBackground(Void... params) {//cant inderstand these dotss
+        protected Void doInBackground(Void... params) {
 
             if (mReadThread != null) {
                 mReadThread.stop();
-                while (mReadThread.isRunning())
-                    ; // Wait until it stops
+                while (mReadThread.isRunning()) ;
                 mReadThread = null;
 
             }
@@ -187,7 +153,7 @@ public class Controlling extends Activity {
             try {
                 mBTSocket.close();
             } catch (IOException e) {
-// TODO Auto-generated catch block
+
                 e.printStackTrace();
             }
 
@@ -235,7 +201,7 @@ public class Controlling extends Activity {
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-// TODO Auto-generated method stub
+
         super.onSaveInstanceState(outState);
     }
 
@@ -259,11 +225,8 @@ public class Controlling extends Activity {
                     mBTSocket.connect();
                 }
             } catch (IOException e) {
-// Unable to connect to device`
-                // e.printStackTrace();
+
                 mConnectSuccessful = false;
-
-
 
             }
             return null;
@@ -279,7 +242,7 @@ public class Controlling extends Activity {
             } else {
                 msg("Connected to device");
                 mIsBluetoothConnected = true;
-                mReadThread = new ReadInput(); // Kick off input reader
+                mReadThread = new ReadInput();
             }
 
             progressDialog.dismiss();
@@ -288,7 +251,7 @@ public class Controlling extends Activity {
     }
     @Override
     protected void onDestroy() {
-        // TODO Auto-generated method stub
+
         super.onDestroy();
     }
 }
